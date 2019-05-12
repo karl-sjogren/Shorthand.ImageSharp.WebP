@@ -11,7 +11,7 @@ namespace Shorthand.ImageSharp.WebP {
     public class WebPEncoder : IImageEncoder {
         public void Encode<TPixel>(Image<TPixel> image, Stream stream) where TPixel : struct, IPixel<TPixel> {
             var psi = new ProcessStartInfo {
-                FileName = "native/osx/cwebp",
+                FileName = Native.CWebP,
                 Arguments = "-o - -- -",
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true

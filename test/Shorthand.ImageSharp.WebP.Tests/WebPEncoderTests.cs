@@ -15,6 +15,7 @@ namespace Shorthand.ImageSharp.WebP.Tests {
                     image.Save(ms, new WebPEncoder());
 
                     Assert.True(ms.Length > 0, "Output stream was empty.");
+                    Assert.InRange(ms.Length, 60, 100);
                 }
             }
         }
@@ -26,7 +27,7 @@ namespace Shorthand.ImageSharp.WebP.Tests {
                     image.Save(ms, new WebPEncoder());
 
                     Assert.True(ms.Length > 0, "Output stream was empty.");
-                    Assert.Equal(33628, ms.Length);
+                    Assert.InRange(ms.Length, 33000, 34000);
                 }
             }
         }
