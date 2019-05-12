@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.Formats;
 namespace Shorthand.ImageSharp.WebP {
     public static class Native {
 
-        public static string CWebP => Path.Combine("native", OSFolder, "cwebp");
+        public static string CWebP => Path.Combine("native", OSFolder, "cwebp") + ExecutableExtension;
 
         private static string OSFolder {
             get {
@@ -27,6 +27,20 @@ namespace Shorthand.ImageSharp.WebP {
                 throw new InvalidOperationException("Somehow this system seems unsupported.");
             }
         }
-        
+
+        private static string ExecutableExtension {
+            get {
+                if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    return string.Empty;
+                
+                if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    return string.Empty;
+                
+                if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    return ".exe";
+                
+                throw new InvalidOperationException("Somehow this system seems unsupported.");
+            }
+        }
     }
 }
