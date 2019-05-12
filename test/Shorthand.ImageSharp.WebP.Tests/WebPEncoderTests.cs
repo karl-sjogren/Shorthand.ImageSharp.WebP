@@ -1,0 +1,34 @@
+using System;
+using System.IO;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using Xunit;
+
+namespace Shorthand.ImageSharp.WebP.Tests {
+    public class WebPEncoderTests {
+        [Fact]
+        public void EncodeSimpleImage() {
+            using (var image = new Image<Rgba32>(20, 20)) {
+                image.Mutate(x => x.Fill(Rgba32.Tomato));
+                using(var ms = new MemoryStream()) {
+                    image.Save(ms, new WebPEncoder());
+
+                    Assert.True(ms.Length > 0, "Output stream was empty.");
+                }
+            }
+        }
+
+        [Fact]
+        public void EncodeFromFile() {
+            using (var image = Image.Load("Resources/test.jpg")) {
+                using(var ms = new MemoryStream()) {
+                    image.Save(ms, new WebPEncoder());
+
+                    Assert.True(ms.Length > 0, "Output stream was empty.");
+                    Assert.Equal(33628, ms.Length);
+                }
+            }
+        }
+    }
+}

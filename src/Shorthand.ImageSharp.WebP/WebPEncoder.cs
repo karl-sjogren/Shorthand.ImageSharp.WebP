@@ -1,0 +1,37 @@
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.ColorSpaces.Conversion;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.PixelFormats;
+
+namespace Shorthand.ImageSharp.WebP {
+    public class WebPEncoder : IImageEncoder {
+        public void Encode<TPixel>(Image<TPixel> image, Stream stream) where TPixel : struct, IPixel<TPixel> {
+            var psi = new ProcessStartInfo {
+                FileName = "native/osx/cwebp",
+                Arguments = "-o - -- -",
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true
+            };
+
+            var tmpStream = new MemoryStream();
+            try {
+                image.SaveAsJpeg(tmpStream);
+                tmpStream.Seek(0, SeekOrigin.Begin);
+
+                var process = Process.Start(psi);
+
+                tmpStream.CopyTo(process.StandardInput.BaseStream);                
+                process.StandardInput.Close();
+
+                var outputStream = process.StandardOutput.BaseStream;
+                outputStream.CopyTo(stream);
+            } finally {
+                tmpStream.Dispose();
+            }
+        }
+    }
+}
