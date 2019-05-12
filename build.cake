@@ -33,11 +33,16 @@ Task("build")
         DotNetCoreBuild("./src/Shorthand.ImageSharp.WebP/Shorthand.ImageSharp.WebP.csproj", buildSettings);
     });
 
-Task("publish")
+Task("pack")
     .IsDependentOn("clean")
     .Does(() => {
-        PublishRuntime("win-x64");
-        PublishRuntime("osx.10.12-x64");
+        var buildSettings = new DotNetCorePackSettings {
+            VersionSuffix = versionSuffix,
+            Configuration = configuration,
+            OutputDirectory = output
+        };
+
+        DotNetCorePack("./src/Shorthand.ImageSharp.WebP/Shorthand.ImageSharp.WebP.csproj", buildSettings);
     });
 
 Task("test")
@@ -76,21 +81,6 @@ Task("azure-pipelines")
     });
 
 Task("default")
-    .IsDependentOn("build");
+    .IsDependentOn("pack");
 
 RunTarget(target);
-
-public void PublishRuntime(string runtime) {
-    var settings = new DotNetCorePublishSettings(){
-        Configuration = configuration,
-        VersionSuffix = versionSuffix,
-        Runtime = runtime
-    };
-
-    settings.OutputDirectory = output + "/" + runtime;
-    DotNetCorePublish("./src/Shorthand.ImageSharp.WebP/Shorthand.ImageSharp.WebP.csproj", settings);
-
-    DeleteFiles("./artifacts/**/feeds.json");
-
-    Zip(settings.OutputDirectory, String.Format("./artifacts/release-{0}.zip", runtime));
-}
