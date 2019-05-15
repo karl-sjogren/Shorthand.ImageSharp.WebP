@@ -9,6 +9,8 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Shorthand.ImageSharp.WebP {
     public class WebPEncoder : IImageEncoder {
+        public static WebPEncoder Instance { get; } = new WebPEncoder();
+
         public void Encode<TPixel>(Image<TPixel> image, Stream stream) where TPixel : struct, IPixel<TPixel> {
             var psi = new ProcessStartInfo {
                 FileName = Native.CWebP,
@@ -19,7 +21,7 @@ namespace Shorthand.ImageSharp.WebP {
 
             var tmpStream = new MemoryStream();
             try {
-                image.SaveAsJpeg(tmpStream);
+                image.SaveAsPng(tmpStream);
                 tmpStream.Seek(0, SeekOrigin.Begin);
 
                 var process = Process.Start(psi);
