@@ -24,19 +24,6 @@ jobs:
       COREHOST_TRACE: 0
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
-  - task: CmdLine@2
-    inputs:
-      script: 'dotnet reportgenerator "-reports:$(Build.SourcesDirectory)/coverage/*.xml" "-targetdir:$(Build.SourcesDirectory)/coverage/html" -reporttypes:HtmlInline_AzurePipelines "-assemblyfilters:+Shorthand.*"' 
-      workingDirectory: '$(Build.SourcesDirectory)/test/Shorthand.ImageSharp.WebP.Tests/'
-  - task: PublishTestResults@2
-    inputs:
-      testRunner: VSTest
-      testResultsFiles: '**/*.trx'
-  - task: PublishCodeCoverageResults@1
-    inputs:
-      codeCoverageTool: 'cobertura'
-      summaryFileLocation: '$(Build.SourcesDirectory)/coverage/results.cobertura.xml'
-      reportDirectory: '$(Build.SourcesDirectory)/coverage/html'
 
 # Run a build on Linux at the same time
 - job: Linux
@@ -52,19 +39,6 @@ jobs:
       COREHOST_TRACE: 0
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
-  - task: CmdLine@2
-    inputs:
-      script: 'dotnet reportgenerator "-reports:$(Build.SourcesDirectory)/coverage/*.xml" "-targetdir:$(Build.SourcesDirectory)/coverage/html" -reporttypes:HtmlInline_AzurePipelines "-assemblyfilters:+Shorthand.*"' 
-      workingDirectory: '$(Build.SourcesDirectory)/test/Shorthand.ImageSharp.WebP.Tests/'
-  - task: PublishTestResults@2
-    inputs:
-      testRunner: VSTest
-      testResultsFiles: '**/*.trx'
-  - task: PublishCodeCoverageResults@1
-    inputs:
-      codeCoverageTool: 'cobertura'
-      summaryFileLocation: '$(Build.SourcesDirectory)/coverage/results.cobertura.xml'
-      reportDirectory: '$(Build.SourcesDirectory)/coverage/html'
 
 # Run a build on Windows at the same time
 - job: Windows
@@ -80,16 +54,3 @@ jobs:
       COREHOST_TRACE: 0
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
-  - task: CmdLine@2
-    inputs:
-      script: 'dotnet reportgenerator "-reports:$(Build.SourcesDirectory)\coverage\*.xml" "-targetdir:$(Build.SourcesDirectory)\coverage\html" -reporttypes:HtmlInline_AzurePipelines "-assemblyfilters:+Shorthand.*"' 
-      workingDirectory: '$(Build.SourcesDirectory)\test\Shorthand.ImageSharp.WebP.Tests\'
-  - task: PublishTestResults@2
-    inputs:
-      testRunner: VSTest
-      testResultsFiles: '**/*.trx'
-  - task: PublishCodeCoverageResults@1
-    inputs:
-      codeCoverageTool: 'cobertura'
-      summaryFileLocation: '$(Build.SourcesDirectory)\coverage\results.cobertura.xml'
-      reportDirectory: '$(Build.SourcesDirectory)\coverage\html'
