@@ -14,7 +14,7 @@ namespace Shorthand.ImageSharp.WebP {
         /// <param name="stream">The stream to save the image to.</param>
         /// <exception cref="System.ArgumentNullException">Thrown if the stream is null.</exception>
         public static void SaveAsWebP<TPixel>(this Image<TPixel> source, Stream stream)
-            where TPixel : struct, IPixel<TPixel> =>
+            where TPixel : unmanaged, IPixel<TPixel> =>
                 source.Save(
                     stream,
                     WebPEncoder.Instance);
