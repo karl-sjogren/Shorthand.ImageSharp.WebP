@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -29,6 +30,50 @@ namespace Shorthand.ImageSharp.WebP.Tests {
                     Assert.InRange(ms.Length, 33000, 34000);
                 }
             }
+        }
+        [Fact]
+        public async Task EncodeSimpleImageAsync() {
+            using var image = new Image<Rgba32>(20, 20);
+            image.Mutate(x => x.BackgroundColor(Rgba32.ParseHex("FF6347")));
+
+            await using var ms = new MemoryStream();
+            await image.SaveAsync(ms, new WebPEncoder());
+
+            Assert.True(ms.Length > 0, "Output stream should not be empty.");
+            Assert.InRange(ms.Length, 60, 100);
+        }
+
+        [Fact]
+        public async Task EncodeFromFileAsync() {
+            using var image = await Image.LoadAsync("Resources/test.jpg");
+
+            await using var ms = new MemoryStream();
+            await image.SaveAsync(ms, new WebPEncoder());
+
+            Assert.True(ms.Length > 0, "Output stream should not be empty.");
+            Assert.InRange(ms.Length, 33000, 34000);
+        }
+
+        [Fact]
+        public async Task EncodeFromFileAndSetLowQualityAsync() {
+            using var image = await Image.LoadAsync("Resources/test.jpg");
+
+            await using var ms = new MemoryStream();
+            await image.SaveAsync(ms, new WebPEncoder { Quality = 20 });
+
+            Assert.True(ms.Length > 0, "Output stream should not be empty.");
+            Assert.InRange(ms.Length, 16000, 17000);
+        }
+
+        [Fact]
+        public async Task EncodeFromFileAndSetHighQualityAsync() {
+            using var image = await Image.LoadAsync("Resources/test.jpg");
+
+            await using var ms = new MemoryStream();
+            await image.SaveAsync(ms, new WebPEncoder { Quality = 80 });
+
+            Assert.True(ms.Length > 0, "Output stream should not be empty.");
+            Assert.InRange(ms.Length, 38000, 40000);
         }
     }
 }
