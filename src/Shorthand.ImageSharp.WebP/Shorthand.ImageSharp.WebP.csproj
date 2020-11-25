@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <Description>Adds a WebP format for ImageSharp. Only for encoding images so far.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <TargetFramework>netstandard2.0</TargetFramework>
