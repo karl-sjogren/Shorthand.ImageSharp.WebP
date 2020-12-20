@@ -18,6 +18,11 @@ strategy:
 pool:
   vmImage: $(imageName)
 steps:
+- task: CmdLine@2
+  condition: eq($(imageName), 'ubuntu-20.04')
+  inputs:
+    script: sudo apt-get update -y && sudo apt-get install -y libwebp-dev
+
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
