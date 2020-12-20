@@ -1,57 +1,36 @@
-# Only trigger CI builds for the master branch, instead
-# of every branch. You'll automatically be configured to
-# build PRs, but you can't currently control that from the YAML directly
-# For details, see https://docs.microsoft.com/en-us/azure/devops/pipelines/build/triggers
 trigger:
-- master
+- '*'
 
-# We can run multiple jobs in parallel. For this project
-# I'm running Linux, Windows, and macOS jobs. For syntac details
-# see https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases
-jobs:
+variables:
+  AZP_CACHING_TAR: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
-# Run a build on macOS at the same time
-- job: macOS
-  pool:
-    vmImage: 'macOS-latest'
-  steps:
-  - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      version: '5.0.101'
-  - bash: ./build.sh --target=azure-pipelines
-    env:
-      COREHOST_TRACE: 0
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-16.04'
+    mac:
+      imageName: 'macos-10.14'
+    windows:
+      imageName: 'vs2017-win2016'
 
-# Run a build on Linux at the same time
-- job: Linux
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - script: sudo apt update && sudo apt install webp -y
-  - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      version: '5.0.101'
-  - bash: ./build.sh --target=azure-pipelines
-    env:
-      COREHOST_TRACE: 0
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-      DOTNET_CLI_TELEMETRY_OPTOUT: 1
-
-# Run a build on Windows at the same time
-- job: Windows
-  pool:
-    vmImage: 'windows-2019'
-  steps:
-  - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      version: '5.0.101'
-  - powershell: .\build.ps1 -Target azure-pipelines
-    env:
-      COREHOST_TRACE: 0
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+pool:
+  vmImage: $(imageName)
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '5.0.101'
+- task: DotNetCoreCLI@2
+  displayName: Run Test Projects
+  inputs:
+    command: 'test'
+    projects: '**/*.Tests.csproj'
+    arguments: '--configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage'
+    publishTestResults: true
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish Code Coverage Report'
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
