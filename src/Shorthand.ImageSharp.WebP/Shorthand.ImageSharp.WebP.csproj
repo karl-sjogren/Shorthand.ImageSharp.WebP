@@ -7,6 +7,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 	<LangVersion>latest</LangVersion>
+	<NoWarn>NU5100,NU5119</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
