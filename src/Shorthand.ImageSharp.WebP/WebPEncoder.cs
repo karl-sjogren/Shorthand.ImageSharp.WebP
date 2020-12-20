@@ -24,32 +24,37 @@ namespace Shorthand.ImageSharp.WebP {
             var pinnedArray = GCHandle.Alloc(buffer, GCHandleType.Pinned);
             var pointer = pinnedArray.AddrOfPinnedObject();
 
+            var resultPointer = IntPtr.Zero;
             Int32 resultSize;
-            IntPtr resultPointer;
 
-            if(Quality.HasValue) {
-                var quality = Convert.ToSingle(Quality.Value);
-                if(image.PixelType.BitsPerPixel == 32) {
-                    resultSize = NativeLibrary.WebPEncodeRGBA(pointer, image.Width, image.Height, image.Width * 4, quality, out resultPointer);
-                } else if(image.PixelType.BitsPerPixel == 24) {
-                    resultSize = NativeLibrary.WebPEncodeRGB(pointer, image.Width, image.Height, image.Width * 3, quality, out resultPointer);
+            try {
+                if(Quality.HasValue) {
+                    var quality = Convert.ToSingle(Quality.Value);
+                    if(image.PixelType.BitsPerPixel == 32) {
+                        resultSize = NativeLibrary.WebPEncodeRGBA(pointer, image.Width, image.Height, image.Width * 4, quality, out resultPointer);
+                    } else if(image.PixelType.BitsPerPixel == 24) {
+                        resultSize = NativeLibrary.WebPEncodeRGB(pointer, image.Width, image.Height, image.Width * 3, quality, out resultPointer);
+                    } else {
+                        throw new InvalidOperationException("Invalid bits per pixel for webp. Use Rgba32 or Rgb24.");
+                    }
                 } else {
-                    throw new InvalidOperationException("Invalid bits per pixel for webp. Use Rgba32 or Rgb24.");
+                    if(image.PixelType.BitsPerPixel == 32) {
+                        resultSize = NativeLibrary.WebPEncodeLosslessRGBA(pointer, image.Width, image.Height, image.Width * 4, out resultPointer);
+                    } else if(image.PixelType.BitsPerPixel == 24) {
+                        resultSize = NativeLibrary.WebPEncodeLosslessRGB(pointer, image.Width, image.Height, image.Width * 3, out resultPointer);
+                    } else {
+                        throw new InvalidOperationException("Invalid bits per pixel for webp. Use Rgba32 or Rgb24.");
+                    }
                 }
-            } else {
-                if(image.PixelType.BitsPerPixel == 32) {
-                    resultSize = NativeLibrary.WebPEncodeLosslessRGBA(pointer, image.Width, image.Height, image.Width * 4, out resultPointer);
-                } else if(image.PixelType.BitsPerPixel == 24) {
-                    resultSize = NativeLibrary.WebPEncodeLosslessRGB(pointer, image.Width, image.Height, image.Width * 3, out resultPointer);
-                } else {
-                    throw new InvalidOperationException("Invalid bits per pixel for webp. Use Rgba32 or Rgb24.");
-                }
+
+                buffer = new byte[resultSize];
+                Marshal.Copy(resultPointer, buffer, 0, resultSize);
+            } finally {
+                pinnedArray.Free();
+
+                if(resultPointer != IntPtr.Zero)
+                    NativeLibrary.WebPFree(resultPointer);
             }
-
-            buffer = new byte[resultSize];
-            Marshal.Copy(resultPointer, buffer, 0, resultSize);
-            pinnedArray.Free();
-            NativeLibrary.WebPFree(resultPointer);
 
             using var ms = new MemoryStream(buffer);
             ms.CopyTo(stream);
