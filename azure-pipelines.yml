@@ -19,7 +19,7 @@ pool:
   vmImage: $(imageName)
 steps:
 - task: CmdLine@2
-  condition: eq($(imageName), 'ubuntu-20.04')
+  condition: eq(variables.imageName, 'ubuntu-20.04')
   inputs:
     script: sudo apt-get update -y && sudo apt-get install -y libwebp-dev
 
@@ -27,6 +27,7 @@ steps:
   inputs:
     packageType: 'sdk'
     version: '5.0.101'
+
 - task: DotNetCoreCLI@2
   displayName: Run Test Projects
   inputs:
@@ -34,6 +35,7 @@ steps:
     projects: '**/*.Tests.csproj'
     arguments: '--configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage'
     publishTestResults: true
+
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish Code Coverage Report'
   inputs:
