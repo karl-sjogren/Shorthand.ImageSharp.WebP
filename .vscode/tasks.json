@@ -7,9 +7,11 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/test/Shorthand.ImageSharp.WebP.Tests/Shorthand.ImageSharp.WebP.Tests.csproj"
+                "${workspaceFolder}/src/Shorthand.ImageSharp.WebP.TestApp/Shorthand.ImageSharp.WebP.TestApp.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$tsc"
+            "problemMatcher": "$msCompile"
         },
         {
             "label": "publish",
@@ -17,9 +19,11 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/test/Shorthand.ImageSharp.WebP.Tests/Shorthand.ImageSharp.WebP.Tests.csproj"
+                "${workspaceFolder}/src/Shorthand.ImageSharp.WebP.TestApp/Shorthand.ImageSharp.WebP.TestApp.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$tsc"
+            "problemMatcher": "$msCompile"
         },
         {
             "label": "watch",
@@ -28,9 +32,11 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/test/Shorthand.ImageSharp.WebP.Tests/Shorthand.ImageSharp.WebP.Tests.csproj"
+                "${workspaceFolder}/src/Shorthand.ImageSharp.WebP.TestApp/Shorthand.ImageSharp.WebP.TestApp.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$tsc"
+            "problemMatcher": "$msCompile"
         }
     ]
 }

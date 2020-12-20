@@ -4,6 +4,14 @@ using System.Runtime.InteropServices;
 
 namespace Shorthand.ImageSharp.WebP {
     public static class NativeLibrary {
+        static NativeLibrary() {
+            if(File.Exists("libwebp" + LibraryExtension))
+                File.Delete("libwebp" + LibraryExtension);
+
+            if(File.Exists(LibWebP))
+                File.Copy(LibWebP, "libwebp" + LibraryExtension);
+        }
+
         public static string LibWebP => Path.Combine("native", OSFolder, "libwebp" + LibraryExtension);
 
         private static string OSFolder {
@@ -40,19 +48,19 @@ namespace Shorthand.ImageSharp.WebP {
             }
         }
 
-        [DllImport(LibraryPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeRGB")]
+        [DllImport("libwebp", CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeRGB")]
         public static extern Int32 WebPEncodeRGB(IntPtr imagePointer, int width, int height, int stride, float quality, out IntPtr output);
 
-        [DllImport(LibraryPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeRGBA")]
+        [DllImport("libwebp", CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeRGBA")]
         public static extern Int32 WebPEncodeRGBA(IntPtr imagePointer, int width, int height, int stride, float quality, out IntPtr output);
 
-        [DllImport(LibraryPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeLosslessRGB")]
+        [DllImport("libwebp", CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeLosslessRGB")]
         public static extern Int32 WebPEncodeLosslessRGB(IntPtr imagePointer, int width, int height, int stride, out IntPtr output);
 
-        [DllImport(LibraryPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeLosslessRGBA")]
+        [DllImport("libwebp", CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeLosslessRGBA")]
         public static extern Int32 WebPEncodeLosslessRGBA(IntPtr imagePointer, int width, int height, int stride, out IntPtr output);
 
-        [DllImport(LibraryPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPFree")]
+        [DllImport("libwebp", CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPFree")]
         public static extern Int32 WebPFree(IntPtr pointer);
     }
 }

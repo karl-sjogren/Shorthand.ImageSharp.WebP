@@ -10,7 +10,7 @@ namespace Shorthand.ImageSharp.WebP.TestApp {
             var filenames = new[] { "pexels-naushil-ansari-638738.jpg", "pexels-pok-rie-5696873.jpg", "pexels-public-domain-pictures-40984.jpg" };
 
             foreach(var filename in filenames) {
-                File.Copy(Path.Combine("sample-files", filename), Path.Combine("output", filename));
+                File.Copy(Path.Combine("sample-files", filename), Path.Combine("output", filename), true);
                 ConvertImage(Path.Combine("sample-files", filename), Path.Combine("output", filename + ".webp"));
                 ConvertImage(Path.Combine("sample-files", filename), Path.Combine("output", filename + "-00.webp"), 0);
                 ConvertImage(Path.Combine("sample-files", filename), Path.Combine("output", filename + "-20.webp"), 20);
