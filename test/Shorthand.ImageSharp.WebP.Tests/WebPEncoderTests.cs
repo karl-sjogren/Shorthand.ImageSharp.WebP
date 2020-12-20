@@ -59,7 +59,7 @@ namespace Shorthand.ImageSharp.WebP.Tests {
             await image.SaveAsync(ms, new WebPEncoder { Quality = 20 });
 
             Assert.True(ms.Length > 0, "Output stream should not be empty.");
-            Assert.InRange(ms.Length, 16000, 17000);
+            Assert.InRange(ms.Length, 15000, 17000);
         }
 
         [Fact]
