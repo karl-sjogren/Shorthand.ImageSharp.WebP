@@ -7,7 +7,7 @@ namespace Shorthand.ImageSharp.WebP.TestApp {
         public static void Main() {
             Directory.CreateDirectory("output");
 
-            var filenames = new[] { "pexels-naushil-ansari-638738.jpg", "pexels-pok-rie-5696873.jpg", "pexels-public-domain-pictures-40984.jpg" };
+            var filenames = new[] { "pexels-naushil-ansari-638738.jpg", "pexels-pok-rie-5696873.jpg", "pexels-public-domain-pictures-40984.jpg", "test-24.png" };
 
             foreach(var filename in filenames) {
                 File.Copy(Path.Combine("sample-files", filename), Path.Combine("output", filename), true);

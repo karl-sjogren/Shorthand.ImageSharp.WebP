@@ -28,6 +28,17 @@ namespace Shorthand.ImageSharp.WebP.Tests {
             Assert.True(ms.Length > 0, "Output stream should not be empty.");
             Assert.InRange(ms.Length, 205000, 206000);
         }
+
+        [Fact]
+        public void EncodeFromFile24bit() {
+            using var image = Image.Load("Resources/test-24.png");
+            using var ms = new MemoryStream();
+            image.Save(ms, new WebPEncoder());
+
+            Assert.True(ms.Length > 0, "Output stream should not be empty.");
+            Assert.InRange(ms.Length, 280000, 285000);
+        }
+
         [Fact]
         public async Task EncodeSimpleImageAsync() {
             using var image = new Image<Rgba32>(20, 20);
