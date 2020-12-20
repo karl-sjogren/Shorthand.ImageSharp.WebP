@@ -1,15 +1,13 @@
 using System;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Shorthand.ImageSharp.WebP
-{
+namespace Shorthand.ImageSharp.WebP {
     public class WebPEncoder : IImageEncoder {
         public static WebPEncoder Instance { get; } = new WebPEncoder();
 
@@ -20,65 +18,46 @@ namespace Shorthand.ImageSharp.WebP
         public Int32? Quality { get; set; }
 
         public void Encode<TPixel>(Image<TPixel> image, Stream stream) where TPixel : unmanaged, IPixel<TPixel> {
-            var processArguments = "-o - -- -";
+            image.TryGetSinglePixelSpan(out var pixelData);
+            var buffer = MemoryMarshal.AsBytes(pixelData).ToArray();
+
+            var pinnedArray = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            var pointer = pinnedArray.AddrOfPinnedObject();
+
+            Int32 resultSize;
+            IntPtr resultPointer;
 
             if(Quality.HasValue) {
-                processArguments = $"-q {Quality.Value.ToString(CultureInfo.InvariantCulture)} -o - -- -";
+                var quality = Convert.ToSingle(Quality.Value);
+                if(image.PixelType.BitsPerPixel == 32) {
+                    resultSize = NativeLibrary.WebPEncodeRGBA(pointer, image.Width, image.Height, image.Width * 4, quality, out resultPointer);
+                } else if(image.PixelType.BitsPerPixel == 24) {
+                    resultSize = NativeLibrary.WebPEncodeRGB(pointer, image.Width, image.Height, image.Width * 3, quality, out resultPointer);
+                } else {
+                    throw new InvalidOperationException("Invalid bits per pixel for webp. Use Rgba32 or Rgb24.");
+                }
+            } else {
+                if(image.PixelType.BitsPerPixel == 32) {
+                    resultSize = NativeLibrary.WebPEncodeLosslessRGBA(pointer, image.Width, image.Height, image.Width * 4, out resultPointer);
+                } else if(image.PixelType.BitsPerPixel == 24) {
+                    resultSize = NativeLibrary.WebPEncodeLosslessRGB(pointer, image.Width, image.Height, image.Width * 3, out resultPointer);
+                } else {
+                    throw new InvalidOperationException("Invalid bits per pixel for webp. Use Rgba32 or Rgb24.");
+                }
             }
 
-            var psi = new ProcessStartInfo {
-                FileName = Native.CWebP,
-                Arguments = processArguments,
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true
-            };
+            buffer = new byte[resultSize];
+            Marshal.Copy(resultPointer, buffer, 0, resultSize);
+            pinnedArray.Free();
+            NativeLibrary.WebPFree(resultPointer);
 
-            var tmpStream = new MemoryStream();
-            try {
-                image.SaveAsPng(tmpStream);
-                tmpStream.Seek(0, SeekOrigin.Begin);
-
-                var process = Process.Start(psi);
-
-                tmpStream.CopyTo(process.StandardInput.BaseStream);
-                process.StandardInput.Close();
-
-                var outputStream = process.StandardOutput.BaseStream;
-                outputStream.CopyTo(stream);
-            } finally {
-                tmpStream.Dispose();
-            }
+            using var ms = new MemoryStream(buffer);
+            ms.CopyTo(stream);
         }
 
-        public async Task EncodeAsync<TPixel>(Image<TPixel> image, Stream stream, CancellationToken cancellationToken) where TPixel : unmanaged, IPixel<TPixel> {
-            var processArguments = "-o - -- -";
-
-            if(Quality.HasValue) {
-                processArguments = $"-q {Quality.Value.ToString(CultureInfo.InvariantCulture)} -o - -- -";
-            }
-
-            var psi = new ProcessStartInfo {
-                FileName = Native.CWebP,
-                Arguments = processArguments,
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true
-            };
-
-            var tmpStream = new MemoryStream();
-            try {
-                image.SaveAsPng(tmpStream);
-                tmpStream.Seek(0, SeekOrigin.Begin);
-
-                var process = Process.Start(psi);
-
-                await tmpStream.CopyToAsync(process.StandardInput.BaseStream).ConfigureAwait(false);
-                process.StandardInput.Close();
-
-                var outputStream = process.StandardOutput.BaseStream;
-                await outputStream.CopyToAsync(stream).ConfigureAwait(false);
-            } finally {
-                tmpStream.Dispose();
-            }
+        public Task EncodeAsync<TPixel>(Image<TPixel> image, Stream stream, CancellationToken cancellationToken) where TPixel : unmanaged, IPixel<TPixel> {
+            Encode(image, stream);
+            return Task.CompletedTask;
         }
     }
 }

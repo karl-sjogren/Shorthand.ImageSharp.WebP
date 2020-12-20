@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Shorthand.ImageSharp.WebP\Shorthand.ImageSharp.WebP.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <None Update="Resources\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -9,7 +9,7 @@ namespace Shorthand.ImageSharp.WebP.Tests {
     public class WebPEncoderTests {
         [Fact]
         public void EncodeSimpleImage() {
-            using (var image = new Image<Rgba32>(20, 20)) {
+            using(var image = new Image<Rgba32>(20, 20)) {
                 image.Mutate(x => x.BackgroundColor(Rgba32.ParseHex("FF6347")));
                 using(var ms = new MemoryStream()) {
                     image.Save(ms, new WebPEncoder());
@@ -22,7 +22,7 @@ namespace Shorthand.ImageSharp.WebP.Tests {
 
         [Fact]
         public void EncodeFromFile() {
-            using (var image = Image.Load("Resources/test.jpg")) {
+            using(var image = Image.Load("Resources/test.jpg")) {
                 using(var ms = new MemoryStream()) {
                     image.Save(ms, new WebPEncoder());
 
