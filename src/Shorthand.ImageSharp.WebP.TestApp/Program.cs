@@ -7,7 +7,7 @@ namespace Shorthand.ImageSharp.WebP.TestApp {
         public static void Main() {
             Directory.CreateDirectory("output");
 
-            var filenames = new[] { "pexels-naushil-ansari-638738.jpg", "pexels-pok-rie-5696873.jpg", "pexels-public-domain-pictures-40984.jpg", "test-24.png" };
+            var filenames = new[] { "pexels-naushil-ansari-638738.jpg", "pexels-pok-rie-5696873.jpg", "pexels-public-domain-pictures-40984.jpg", "test-24.png", "blue-marble.jpg" };
 
             foreach(var filename in filenames) {
                 File.Copy(Path.Combine("sample-files", filename), Path.Combine("output", filename), true);
@@ -23,7 +23,7 @@ namespace Shorthand.ImageSharp.WebP.TestApp {
 
         private static void ConvertImage(string inputPath, string outputPath, Int32? quality = null) {
             using var image = Image.Load(inputPath);
-            using var ms = File.OpenWrite(outputPath);
+            using var ms = File.Create(outputPath);
             image.Save(ms, new WebPEncoder { Quality = quality });
         }
     }

@@ -1,10 +1,12 @@
 using System;
+using System.Buffers;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace Shorthand.ImageSharp.WebP {
@@ -18,6 +20,8 @@ namespace Shorthand.ImageSharp.WebP {
         public Int32? Quality { get; set; }
 
         public void Encode<TPixel>(Image<TPixel> image, Stream stream) where TPixel : unmanaged, IPixel<TPixel> {
+            var memoryAllocator = SixLabors.ImageSharp.Configuration.Default.MemoryAllocator;
+
             image.TryGetSinglePixelSpan(out var pixelData);
             var buffer = MemoryMarshal.AsBytes(pixelData).ToArray();
 
@@ -26,6 +30,7 @@ namespace Shorthand.ImageSharp.WebP {
 
             var resultPointer = IntPtr.Zero;
             Int32 resultSize;
+            IManagedByteBuffer managedBuffer = null;
 
             try {
                 if(Quality.HasValue) {
@@ -47,17 +52,19 @@ namespace Shorthand.ImageSharp.WebP {
                     }
                 }
 
-                buffer = new byte[resultSize];
+                managedBuffer = memoryAllocator.AllocateManagedByteBuffer(resultSize);
+                buffer = managedBuffer.Array;
                 Marshal.Copy(resultPointer, buffer, 0, resultSize);
+
+                using var ms = new MemoryStream(buffer, 0, resultSize);
+                ms.CopyTo(stream);
             } finally {
                 pinnedArray.Free();
+                managedBuffer?.Dispose();
 
                 if(resultPointer != IntPtr.Zero)
                     NativeLibrary.WebPFree(resultPointer);
             }
-
-            using var ms = new MemoryStream(buffer);
-            ms.CopyTo(stream);
         }
 
         public Task EncodeAsync<TPixel>(Image<TPixel> image, Stream stream, CancellationToken cancellationToken) where TPixel : unmanaged, IPixel<TPixel> {

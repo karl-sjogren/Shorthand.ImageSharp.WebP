@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.ImageSharp.WebP.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.ImageSharp.WebP.TestApp", "src\Shorthand.ImageSharp.WebP.TestApp\Shorthand.ImageSharp.WebP.TestApp.csproj", "{C928C1B0-79C8-4658-8A60-734C9F20A6DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.ImageSharp.WebP.Benchmarks", "src\Shorthand.ImageSharp.WebP.Benchmarks\Shorthand.ImageSharp.WebP.Benchmarks.csproj", "{77B1D566-C114-4BC0-8E20-6D4903925F7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,10 +64,23 @@ Global
 		{C928C1B0-79C8-4658-8A60-734C9F20A6DD}.Release|x64.Build.0 = Release|Any CPU
 		{C928C1B0-79C8-4658-8A60-734C9F20A6DD}.Release|x86.ActiveCfg = Release|Any CPU
 		{C928C1B0-79C8-4658-8A60-734C9F20A6DD}.Release|x86.Build.0 = Release|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Debug|x64.Build.0 = Debug|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Debug|x86.Build.0 = Debug|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Release|x64.ActiveCfg = Release|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Release|x64.Build.0 = Release|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Release|x86.ActiveCfg = Release|Any CPU
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{ED8CBE82-6B8F-49B5-840E-3D18DE76C27E} = {DB311DC7-3889-4586-A2DF-2DDF7981EF53}
 		{39AA254A-61F9-4797-A911-9C0412AE5B8B} = {5279E44F-190A-45CC-857E-B118D1689AD4}
 		{C928C1B0-79C8-4658-8A60-734C9F20A6DD} = {DB311DC7-3889-4586-A2DF-2DDF7981EF53}
+		{77B1D566-C114-4BC0-8E20-6D4903925F7B} = {DB311DC7-3889-4586-A2DF-2DDF7981EF53}
 	EndGlobalSection
 EndGlobal
