@@ -30,7 +30,6 @@ namespace Shorthand.ImageSharp.WebP {
 
             var resultPointer = IntPtr.Zero;
             Int32 resultSize;
-            IManagedByteBuffer managedBuffer = null;
 
             try {
                 if(Quality.HasValue) {
@@ -52,7 +51,7 @@ namespace Shorthand.ImageSharp.WebP {
                     }
                 }
 
-                managedBuffer = memoryAllocator.AllocateManagedByteBuffer(resultSize);
+                using var managedBuffer = memoryAllocator.AllocateManagedByteBuffer(resultSize);
                 buffer = managedBuffer.Array;
                 Marshal.Copy(resultPointer, buffer, 0, resultSize);
 
@@ -60,7 +59,6 @@ namespace Shorthand.ImageSharp.WebP {
                 ms.CopyTo(stream);
             } finally {
                 pinnedArray.Free();
-                managedBuffer?.Dispose();
 
                 if(resultPointer != IntPtr.Zero)
                     NativeLibrary.WebPFree(resultPointer);
