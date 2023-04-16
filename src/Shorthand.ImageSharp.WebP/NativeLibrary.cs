@@ -9,11 +9,18 @@ public static class NativeLibrary {
         if(File.Exists("libwebp" + LibraryExtension))
             File.Delete("libwebp" + LibraryExtension);
 
-        if(File.Exists(LibWebP))
-            File.Copy(LibWebP, "libwebp" + LibraryExtension);
+        if(File.Exists("libsharpyuv" + LibraryExtension))
+            File.Delete("libsharpyuv" + LibraryExtension);
+
+        if(File.Exists(MainLibPath))
+            File.Copy(MainLibPath, "libwebp" + LibraryExtension);
+
+        if(File.Exists(LibYUVPath))
+            File.Copy(LibYUVPath, "libsharpyuv" + LibraryExtension);
     }
 
-    public static string LibWebP => Path.Combine("native", OSFolder, "libwebp" + LibraryExtension);
+    public static string MainLibPath => Path.Combine("native", OSFolder, "libwebp" + LibraryExtension);
+    public static string LibYUVPath => Path.Combine("native", OSFolder, "libsharpyuv" + LibraryExtension);
 
     private static string OSFolder {
         get {
@@ -50,16 +57,16 @@ public static class NativeLibrary {
     }
 
     [DllImport("libwebp", CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeRGB")]
-    public static extern Int32 WebPEncodeRGB(IntPtr imagePointer, int width, int height, int stride, float quality, out IntPtr output);
+    public static extern Int32 WebPEncodeRGB(IntPtr imagePointer, Int32 width, Int32 height, Int32 stride, float quality, out IntPtr output);
 
     [DllImport("libwebp", CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeRGBA")]
-    public static extern Int32 WebPEncodeRGBA(IntPtr imagePointer, int width, int height, int stride, float quality, out IntPtr output);
+    public static extern Int32 WebPEncodeRGBA(IntPtr imagePointer, Int32 width, Int32 height, Int32 stride, float quality, out IntPtr output);
 
     [DllImport("libwebp", CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeLosslessRGB")]
-    public static extern Int32 WebPEncodeLosslessRGB(IntPtr imagePointer, int width, int height, int stride, out IntPtr output);
+    public static extern Int32 WebPEncodeLosslessRGB(IntPtr imagePointer, Int32 width, Int32 height, Int32 stride, out IntPtr output);
 
     [DllImport("libwebp", CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPEncodeLosslessRGBA")]
-    public static extern Int32 WebPEncodeLosslessRGBA(IntPtr imagePointer, int width, int height, int stride, out IntPtr output);
+    public static extern Int32 WebPEncodeLosslessRGBA(IntPtr imagePointer, Int32 width, Int32 height, Int32 stride, out IntPtr output);
 
     [DllImport("libwebp", CallingConvention = CallingConvention.Cdecl, EntryPoint = "WebPFree")]
     public static extern Int32 WebPFree(IntPtr pointer);

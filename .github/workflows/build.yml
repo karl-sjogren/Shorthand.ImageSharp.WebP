@@ -1,17 +1,10 @@
-name: 'Build and publish application'
+name: 'Build and test package'
 
 on:
   push:
-    branches:
-      - develop
-      - main
-      - 'release/**'
-      - 'feature/**'
-      - 'hotfix/**'
     paths-ignore:
       - 'README.md'
-      - 'docs/*'
-      - 'scripts/*'
+      - 'benchmarks/*'
       - '.vscode/*'
   pull_request:
 
@@ -39,7 +32,8 @@ jobs:
       matrix:
         os: [
           ubuntu-latest,
-          windows-latest
+          windows-latest,
+          osx-latest
         ]
     runs-on: ${{ matrix.os }}
 
@@ -181,13 +175,6 @@ jobs:
     - name: Restore NuGet packages
       run: dotnet restore --verbosity minimal
 
-    - name: Publish application
-      run: dotnet publish -o ./artifacts -c Release
+    - name: Build package
+      run: dotnet pack -o ./artifacts -c Release
       working-directory: ./
-
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: publish-artifacts
-        path: ./artifacts/
-        if-no-files-found: error

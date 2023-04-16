@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
@@ -27,7 +28,7 @@ public static class Program {
         }
 
         [Benchmark]
-        public void EncodeImage() {
+        public void EncodeImageNatively() {
             using(var ms = new MemoryStream())
                 _image1.Save(ms, new WebPNativeEncoder { Quality = 80 });
 
@@ -36,6 +37,18 @@ public static class Program {
 
             using(var ms = new MemoryStream())
                 _image3.Save(ms, new WebPNativeEncoder { Quality = 80 });
+        }
+
+        [Benchmark]
+        public void EncodeImageBuiltin() {
+            using(var ms = new MemoryStream())
+                _image1.Save(ms, new WebpEncoder { Quality = 80 });
+
+            using(var ms = new MemoryStream())
+                _image2.Save(ms, new WebpEncoder { Quality = 80 });
+
+            using(var ms = new MemoryStream())
+                _image3.Save(ms, new WebpEncoder { Quality = 80 });
         }
     }
 }

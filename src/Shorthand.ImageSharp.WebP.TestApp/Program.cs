@@ -6,9 +6,18 @@ namespace Shorthand.ImageSharp.WebP.TestApp;
 
 public static class Program {
     public static void Main() {
+        Configuration.Default.PreferContiguousImageBuffers = true;
         Directory.CreateDirectory("output");
 
-        var filenames = new[] { "pexels-naushil-ansari-638738.jpg", "pexels-pok-rie-5696873.jpg", "pexels-public-domain-pictures-40984.jpg", "test-24.png", "blue-marble.jpg" };
+        var filenames = new[] {
+            "pexels-naushil-ansari-638738.jpg",
+            "pexels-pok-rie-5696873.jpg",
+            "pexels-public-domain-pictures-40984.jpg",
+            "test-24.png",
+            "blue-marble.jpg",
+            "transparent-dice.png",
+            "baby-tux.png"
+        };
 
         foreach(var filename in filenames) {
             File.Copy(Path.Combine("sample-files", filename), Path.Combine("output", filename), true);
@@ -23,6 +32,7 @@ public static class Program {
     }
 
     private static void ConvertImage(string inputPath, string outputPath, Int32? quality = null) {
+        Console.WriteLine($"Converting {inputPath} to {outputPath} (quality: {quality})");
         using var image = Image.Load(inputPath);
         using var ms = File.Create(outputPath);
         image.Save(ms, new WebPNativeEncoder { Quality = quality });

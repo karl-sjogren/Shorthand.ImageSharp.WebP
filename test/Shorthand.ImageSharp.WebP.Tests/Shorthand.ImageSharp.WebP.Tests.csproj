@@ -9,10 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="dotnet-reportgenerator-cli" Version="4.0.15" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Shorthand.ImageSharp.WebP\Shorthand.ImageSharp.WebP.csproj" />
   </ItemGroup>
 

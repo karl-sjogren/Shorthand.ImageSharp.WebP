@@ -24,7 +24,7 @@ public class WebPNativeEncoderTests {
         image.Save(ms, new WebPNativeEncoder());
 
         Assert.True(ms.Length > 0, "Output stream should not be empty.");
-        Assert.InRange(ms.Length, 205000, 206000);
+        Assert.InRange(ms.Length, 205_000, 206_000);
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class WebPNativeEncoderTests {
         image.Save(ms, new WebPNativeEncoder());
 
         Assert.True(ms.Length > 0, "Output stream should not be empty.");
-        Assert.InRange(ms.Length, 280000, 285000);
+        Assert.InRange(ms.Length, 280_000, 285_000);
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class WebPNativeEncoderTests {
         await image.SaveAsync(ms, new WebPNativeEncoder());
 
         Assert.True(ms.Length > 0, "Output stream should not be empty.");
-        Assert.InRange(ms.Length, 205000, 206000);
+        Assert.InRange(ms.Length, 205_000, 206_000);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class WebPNativeEncoderTests {
         await image.SaveAsync(ms, new WebPNativeEncoder { Quality = 20 });
 
         Assert.True(ms.Length > 0, "Output stream should not be empty.");
-        Assert.InRange(ms.Length, 15000, 17000);
+        Assert.InRange(ms.Length, 15_000, 17_000);
     }
 
     [Fact]
@@ -79,6 +79,17 @@ public class WebPNativeEncoderTests {
         await image.SaveAsync(ms, new WebPNativeEncoder { Quality = 80 });
 
         Assert.True(ms.Length > 0, "Output stream should not be empty.");
-        Assert.InRange(ms.Length, 38000, 40000);
+        Assert.InRange(ms.Length, 38_000, 40_000);
+    }
+
+    [Fact]
+    public async Task EncodeTransparentAndLossyAsync() {
+        using var image = await Image.LoadAsync("Resources/transparent-dice.png");
+
+        await using var ms = new MemoryStream();
+        await image.SaveAsync(ms, new WebPNativeEncoder { Quality = 80 });
+
+        Assert.True(ms.Length > 0, "Output stream should not be empty.");
+        Assert.InRange(ms.Length, 65_000, 70_000);
     }
 }
