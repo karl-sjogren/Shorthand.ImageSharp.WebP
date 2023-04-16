@@ -9,8 +9,8 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Shorthand.ImageSharp.WebP;
 
-public class WebPEncoder : IImageEncoder {
-    public static WebPEncoder Instance { get; } = new WebPEncoder();
+public class WebPNativeEncoder : IImageEncoder {
+    public static WebPNativeEncoder Instance { get; } = new WebPNativeEncoder();
 
     //
     // Summary:

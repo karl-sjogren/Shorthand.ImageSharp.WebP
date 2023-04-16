@@ -29,13 +29,13 @@ public static class Program {
         [Benchmark]
         public void EncodeImage() {
             using(var ms = new MemoryStream())
-                _image1.Save(ms, new WebPEncoder { Quality = 80 });
+                _image1.Save(ms, new WebPNativeEncoder { Quality = 80 });
 
             using(var ms = new MemoryStream())
-                _image2.Save(ms, new WebPEncoder { Quality = 80 });
+                _image2.Save(ms, new WebPNativeEncoder { Quality = 80 });
 
             using(var ms = new MemoryStream())
-                _image3.Save(ms, new WebPEncoder { Quality = 80 });
+                _image3.Save(ms, new WebPNativeEncoder { Quality = 80 });
         }
     }
 }

@@ -25,6 +25,6 @@ public static class Program {
     private static void ConvertImage(string inputPath, string outputPath, Int32? quality = null) {
         using var image = Image.Load(inputPath);
         using var ms = File.Create(outputPath);
-        image.Save(ms, new WebPEncoder { Quality = quality });
+        image.Save(ms, new WebPNativeEncoder { Quality = quality });
     }
 }
