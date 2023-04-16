@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/Shorthand.ImageSharp.WebP.TestApp/bin/Debug/net5.0/Shorthand.ImageSharp.WebP.TestApp.dll",
+            "program": "${workspaceFolder}/src/Shorthand.ImageSharp.WebP.TestApp/bin/Debug/net6.0/Shorthand.ImageSharp.WebP.TestApp.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/Shorthand.ImageSharp.WebP.TestApp",
             "console": "internalConsole",

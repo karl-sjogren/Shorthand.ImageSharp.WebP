@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.ImageSharp.WebP.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.ImageSharp.WebP.TestApp", "src\Shorthand.ImageSharp.WebP.TestApp\Shorthand.ImageSharp.WebP.TestApp.csproj", "{C928C1B0-79C8-4658-8A60-734C9F20A6DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.ImageSharp.WebP.Benchmarks", "src\Shorthand.ImageSharp.WebP.Benchmarks\Shorthand.ImageSharp.WebP.Benchmarks.csproj", "{77B1D566-C114-4BC0-8E20-6D4903925F7B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.ImageSharp.WebP.Benchmarks", "benchmarks\Shorthand.ImageSharp.WebP.Benchmarks\Shorthand.ImageSharp.WebP.Benchmarks.csproj", "{77B1D566-C114-4BC0-8E20-6D4903925F7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
