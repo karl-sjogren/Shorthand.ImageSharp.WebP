@@ -20,6 +20,8 @@ public static class Program {
         private readonly Image _image3;
 
         public EncodeImageBenchmark() {
+            Configuration.Default.PreferContiguousImageBuffers = true;
+
             _image1 = new Image<Rgba32>(4096, 4096);
             _image1.Mutate(x => x.BackgroundColor(Rgba32.ParseHex("FF6347")));
 
@@ -40,15 +42,39 @@ public static class Program {
         }
 
         [Benchmark]
+        public void EncodeImageNativelyUnsafe() {
+            using(var ms = new MemoryStream())
+                _image1.Save(ms, new WebPNativeEncoder { Quality = 80 });
+
+            using(var ms = new MemoryStream())
+                _image2.Save(ms, new WebPNativeEncoder { Quality = 80 });
+
+            using(var ms = new MemoryStream())
+                _image3.Save(ms, new WebPNativeEncoder { Quality = 80 });
+        }
+
+        [Benchmark]
+        public void EncodeImageNativelyManageAllocations() {
+            using(var ms = new MemoryStream())
+                _image1.Save(ms, new WebPNativeEncoderManagedAllocations { Quality = 80 });
+
+            using(var ms = new MemoryStream())
+                _image2.Save(ms, new WebPNativeEncoderManagedAllocations { Quality = 80 });
+
+            using(var ms = new MemoryStream())
+                _image3.Save(ms, new WebPNativeEncoderManagedAllocations { Quality = 80 });
+        }
+
+        [Benchmark]
         public void EncodeImageBuiltin() {
             using(var ms = new MemoryStream())
                 _image1.Save(ms, new WebpEncoder { Quality = 80 });
 
-            using(var ms = new MemoryStream())
-                _image2.Save(ms, new WebpEncoder { Quality = 80 });
+            //using(var ms = new MemoryStream())
+            //    _image2.Save(ms, new WebpEncoder { Quality = 80 });
 
-            using(var ms = new MemoryStream())
-                _image3.Save(ms, new WebpEncoder { Quality = 80 });
+            //using(var ms = new MemoryStream())
+            //    _image3.Save(ms, new WebpEncoder { Quality = 80 });
         }
     }
 }

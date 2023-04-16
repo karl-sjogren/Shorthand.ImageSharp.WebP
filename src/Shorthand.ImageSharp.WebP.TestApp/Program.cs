@@ -6,7 +6,6 @@ namespace Shorthand.ImageSharp.WebP.TestApp;
 
 public static class Program {
     public static void Main() {
-        Configuration.Default.PreferContiguousImageBuffers = true;
         Directory.CreateDirectory("output");
 
         var filenames = new[] {
@@ -33,8 +32,12 @@ public static class Program {
 
     private static void ConvertImage(string inputPath, string outputPath, Int32? quality = null) {
         Console.WriteLine($"Converting {inputPath} to {outputPath} (quality: {quality})");
-        using var image = Image.Load(inputPath);
+
+        var config = Configuration.Default.Clone();
+        //config.PreferContiguousImageBuffers = true;
+
+        using var image = Image.Load(config, inputPath);
         using var ms = File.Create(outputPath);
-        image.Save(ms, new WebPNativeEncoder { Quality = quality });
+        image.Save(ms, new WebPNativeEncoderManagedAllocations { Quality = quality });
     }
 }

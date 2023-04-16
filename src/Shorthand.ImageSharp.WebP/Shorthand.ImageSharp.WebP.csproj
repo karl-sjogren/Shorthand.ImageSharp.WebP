@@ -10,6 +10,10 @@
     <NoWarn>NU5100,NU5119</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Update="native\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
