@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,12 +32,8 @@ public class WebPNativeEncoderManagedAllocations : IImageEncoder {
             position += span.Length;
         }
 
-        //var pixelData2 = image.GetPixelMemoryGroup().SelectMany(group => group.ToArray()).ToArray();
-
         unsafe {
             var pixelPin = pixelData.Memory.Pin();
-            //var pinnedArray = GCHandle.Alloc(pixelData.Memory, GCHandleType.Pinned);
-            //var pointer = pinnedArray.AddrOfPinnedObject();
             var pointer = new IntPtr(pixelPin.Pointer);
 
             var resultPointer = IntPtr.Zero;
@@ -71,8 +66,6 @@ public class WebPNativeEncoderManagedAllocations : IImageEncoder {
                 using var ms = new MemoryStream(resultBuffer, 0, resultSize);
                 ms.CopyTo(stream);
             } finally {
-                //pinnedArray.Free();
-
                 if(resultPointer != IntPtr.Zero)
                     NativeLibrary.WebPFree(resultPointer);
             }
