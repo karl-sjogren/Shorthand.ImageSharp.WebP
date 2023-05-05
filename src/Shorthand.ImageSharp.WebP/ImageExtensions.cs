@@ -18,5 +18,5 @@ public static class ImageExtensions {
         where TPixel : unmanaged, IPixel<TPixel> =>
             source.Save(
                 stream,
-                WebPNativeEncoder.Instance);
+                WebPNativeEncoderManagedAllocations.Instance);
 }
